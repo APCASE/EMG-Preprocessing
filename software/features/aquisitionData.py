@@ -34,6 +34,12 @@ class DataAquisition:
         self.database = Database_emg('channels', 'data')
     
     def updateGraph(self, canvas):
+        """
+        Método para atualizar os dados aquisitados e o gráfico da janela de aquisição
+
+        Args:
+            Canvas: FigureCanvas da biblioteca PyQT5
+        """
         # Inicializando plotagem caso o widget ainda não esteja definido
         if not(self._plot):
             self._plot = PlotLive(canvas, self.interval, self.nChannels)
@@ -65,8 +71,6 @@ class DataAquisition:
             #self.database.save(self.currentDataChannels)
             self.__c = 0
 
-        
-
     @staticmethod
     def generateDataTest(nChannels, batchSize):
         """Método para gerar dados randomicamente.
@@ -82,5 +86,12 @@ class DataAquisition:
     
     @staticmethod
     def writeJson(file, data, directory="data"):
+        """Método para salvar arquivo em JSON.
+        
+        Args:
+            File: Arquivos onde os dados serão escritos
+            data: Dados para salvar
+            directory: Pasta onde os arquivos serão salvos
+        """
         with open("./{}/{}.json".format(directory, file), "w") as writeFile:
             json.dump(data, writeFile, indent=4)
