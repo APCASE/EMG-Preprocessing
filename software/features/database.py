@@ -1,7 +1,7 @@
 import pymongo
 import time
 class Database_emg:
-
+    
     def __init__(self, database_name, col_name, url=None):
         self.__database_name = database_name
         self.__col_name = col_name
