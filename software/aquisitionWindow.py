@@ -3,7 +3,8 @@ from PyQt5.uic import loadUi
 from PyQt5.QtCore import QTimer
 
 import sys
-sys.path.insert(0, './features/')
+if not './features/' in sys.path:
+    sys.path.insert(0, './features/')
 
 from features.aquisitionData import DataAquisition
 from preprocessingWindow import PreProcessingDialog

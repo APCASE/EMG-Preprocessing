@@ -3,43 +3,23 @@ from PyQt5.uic import loadUi
 import numpy as np
 
 import sys
-sys.path.insert(0, './features/')
+if not './features/' in sys.path:
+    sys.path.insert(0, './features/')
 
 from features.preprocessing import Functions
-from sklearn.preprocessing import MinMaxScaler
-from plotlive import AnalysisPreprocessingPlot
+from features.plotlive import AnalysisPreprocessingPlot
+from features.preprocessingData import PreprocessingData 
+
 
 class PreProcessingDialog(QDialog):
 
     def __init__(self, aquisition):
         super().__init__()
-        self.database = aquisition.database
-        self.__nChannels = aquisition.nChannels
-        self.__batchsize = aquisition.batchSize
-        self.__preprocessingFunctions = {}
-        self.fPreprocessing = Functions()
+        self.preprocessing = PreprocessingData(aquisition)
         
         loadUi("preprocessingDialog.ui", self)
         
-        self.addPreprocessingFunctionsWidget()
-        self.setPreprocessingFunctions()
-
-        self.spinBoxNChannel.setRange(0, self.__nChannels)
-
         
-        self.getDataFromDatabase()
-        
-        
-        
-        
-
-        self.__plot = None
-        self.showPreprocessingFunction()
-        self.verticalSliderBias.valueChanged.connect(self.setBias)
-        
-
-        self.__bias = 0
-    
 
     def addPreprocessingFunctionsWidget(self):
         self.checkBoxFunctions = {}
