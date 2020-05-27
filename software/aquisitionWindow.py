@@ -3,8 +3,9 @@ from PyQt5.uic import loadUi
 from PyQt5.QtCore import QTimer
 
 import sys
+sys.path.insert(0, './features/')
 
-from aquisitionData import DataAquisition
+from features.aquisitionData import DataAquisition
 from preprocessingWindow import PreProcessingDialog
 
 class AquisitionDialog(QDialog):

@@ -1,7 +1,11 @@
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 import numpy as np
-from preprocessing import Functions
+
+import sys
+sys.path.insert(0, './features/')
+
+from features.preprocessing import Functions
 from sklearn.preprocessing import MinMaxScaler
 from plotlive import AnalysisPreprocessingPlot
 
