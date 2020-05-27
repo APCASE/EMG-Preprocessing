@@ -9,12 +9,13 @@ class PreprocessingData:
         # Pegando os dados da classe database
         self.database = aquisition.database
         # Pegando o numero de canais utilizados na aquisição
-        self.__nChannels = aquisition.nChannels
+        self.nChannels = aquisition.nChannels
         
-        self.__batchsize = aquisition.batchSize
+        self.batchsize = aquisition.batchSize
         # Dicionário para selecionar as funções de pré-processmento que serão utilizadas
-        self.__preprocessingFunctions = {}
+        self.preprocessingFunctions = {}
         self.fPreprocessing = Functions()
+
 
     def getDataFromDatabase(self):
         '''
@@ -32,9 +33,10 @@ class PreprocessingData:
         self.preprocessedData = {}
         for k, v in self.dataChannel.items():
             
-            self.dataChannel[k] = np.asarray(v).reshape(-1, self.__batchsize)
-            self.preprocessedData[k] = self.fPreprocessing.transform(self.dataChannel[k], self.__preprocessingFunctions)
-    
+            self.dataChannel[k] = np.asarray(v).reshape(-1, self.batchsize)
+            self.preprocessedData[k] = self.fPreprocessing.transform(self.dataChannel[k], self.preprocessingFunctions)
+        print(self.preprocessedData)
+        
     def getMinMaxRange(self, channel, function):
         '''
         Método para retornar os pontos máximos e mínimos de um conjunto de dados
@@ -56,15 +58,15 @@ class PreprocessingData:
             value: valor inteiro de 0 a 100
         '''
 
-        self.__bias = self.scaler.inverse_transform(np.array(value).reshape(-1, 1))
+        self.bias = self.scaler.inverse_transform(np.array(value).reshape(-1, 1))
     
     def setPreprocessingFunction(self, functions):
         '''
         Esse método irá configurar as funções de pré-processamento que serão utilizadas para construção do dataset
         '''
-        self.__preprocessingFunctions = []
+        self.preprocessingFunctions = []
         for f in functions:
-            self.__preprocessingFunctions.append(f)
+            self.preprocessingFunctions.append(f)
     
     def generateBinaryClassifier(self, data, nMovimento):
         '''
@@ -78,7 +80,7 @@ class PreprocessingData:
         binary = []
 
         for i in range(np.shape(data)[0]):
-            if data[i]>self.__bias:
+            if data[i]>self.bias:
                 binary.append(nMovimento)
             else:
                 binary.append(0)

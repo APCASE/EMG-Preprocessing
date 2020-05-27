@@ -82,9 +82,9 @@ class Preprocessing:
     
     def __init__(self, aquisition):
         self.database = aquisition.database
-        self.__nChannels = aquisition.nChannels
-        self.__batchsize = aquisition.batchSize
-        self.__preprocessingFunctions = {}
+        self.nChannels = aquisition.nChannels
+        self.batchsize = aquisition.batchSize
+        self.preprocessingFunctions = {}
         self.fPreprocessing = Functions()
     
     def getDataFromDatabase(self):
@@ -101,5 +101,5 @@ class Preprocessing:
         self.preprocessedData = {}
         for k, v in self.dataChannel.items():
             
-            self.dataChannel[k] = np.asarray(v).reshape(-1, self.__batchsize)
-            self.preprocessedData[k] = self.fPreprocessing.transform(self.dataChannel[k], self.__preprocessingFunctions)
+            self.dataChannel[k] = np.asarray(v).reshape(-1, self.batchsize)
+            self.preprocessedData[k] = self.fPreprocessing.transform(self.dataChannel[k], self.preprocessingFunctions)

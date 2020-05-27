@@ -20,11 +20,14 @@ class PreProcessingDialog(QDialog):
         
         loadUi("preprocessingDialog.ui", self)
         
-        self.addPreprocessingFunctionsWidget()
-
+        self.spinBoxNChannel.setRange(0, aquisition.nChannels)
         self.verticalSliderBias.valueChanged.connect(self.setBias)
 
-        self.__plot = None
+        self.addPreprocessingFunctionsWidget()
+        self.setPreprocessingFunctions()
+
+        self.plot = None
+        
 
 
     def addPreprocessingFunctionsWidget(self):
@@ -56,12 +59,12 @@ class PreProcessingDialog(QDialog):
     def setBias(self):
         self.preprocessing.setBias(self.scaler.inverse_transform(np.array(self.verticalSliderBias.value()).reshape(-1,1)))
         self.target = self.generateBinaryClassifier(self.dataAnalyse, 1)
-        self.__plot.updateGraph(self.dataAnalyse, self.target)
+        self.plot.updateGraph(self.dataAnalyse, self.target)
 
     def setPreprocessingFunctions(self):
         for k, v in self.checkBoxFunctions.items():
             if v.isChecked():
-                self.__preprocessingFunctions[k] = k
+                self.preprocessing.preprocessingFunctions[k] = k
     
     def showPreprocessingFunction(self):
         channel = self.spinBoxNChannel.value()
@@ -74,9 +77,9 @@ class PreProcessingDialog(QDialog):
         
         self.dataAnalyse = self.preprocessing.preprocessedData[str(channel)][str(function)]
         
-        if not(self.__plot):
-            self.__plot = AnalysisPreprocessingPlot(self.PlotWidget.canvas, (0, np.shape(self.dataAnalyse)[0]))
+        if not(self.plot):
+            self.plot = AnalysisPreprocessingPlot(self.PlotWidget.canvas, (0, np.shape(self.dataAnalyse)[0]))
         self.setMinMaxRange(str(channel), str(function))
-        self.__plot.updateGraph(self.dataAnalyse, None)
+        self.plot.updateGraph(self.dataAnalyse, None)
         
     
