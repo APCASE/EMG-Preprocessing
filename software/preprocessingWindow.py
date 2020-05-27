@@ -8,8 +8,7 @@ if not './features/' in sys.path:
 
 from features.preprocessing import Functions
 from features.plotlive import AnalysisPreprocessingPlot
-from features.preprocessingData import PreprocessingData 
-
+from features.preprocessingData import PreprocessingData
 
 class PreProcessingDialog(QDialog):
 
@@ -81,5 +80,3 @@ class PreProcessingDialog(QDialog):
             self.plot = AnalysisPreprocessingPlot(self.PlotWidget.canvas, (0, np.shape(self.dataAnalyse)[0]))
         self.setMinMaxRange(str(channel), str(function))
         self.plot.updateGraph(self.dataAnalyse, None)
-        
-    
