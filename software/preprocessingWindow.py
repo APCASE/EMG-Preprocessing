@@ -22,6 +22,9 @@ class PreProcessingDialog(QDialog):
         
         self.addPreprocessingFunctionsWidget()
 
+        self.verticalSliderBias.valueChanged.connect(self.setBias)
+
+        self.__plot = None
 
 
     def addPreprocessingFunctionsWidget(self):
@@ -51,8 +54,8 @@ class PreProcessingDialog(QDialog):
         self.verticalSliderBias.setSingleStep(.001)
         
     def setBias(self):
-        self.__bias = self.scaler.inverse_transform(np.array(self.verticalSliderBias.value()).reshape(-1,1))
-        self.target = self.generateBinaryClassifier(self.dataAnalyse, self.__bias)
+        self.preprocessing.setBias(self.scaler.inverse_transform(np.array(self.verticalSliderBias.value()).reshape(-1,1)))
+        self.target = self.generateBinaryClassifier(self.dataAnalyse, 1)
         self.__plot.updateGraph(self.dataAnalyse, self.target)
 
     def setPreprocessingFunctions(self):

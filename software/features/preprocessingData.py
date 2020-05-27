@@ -66,8 +66,7 @@ class PreprocessingData:
         for f in functions:
             self.__preprocessingFunctions.append(f)
     
-    @staticmethod
-    def generateBinaryClassifier(data, bias, nMovimento):
+    def generateBinaryClassifier(self, data, nMovimento):
         '''
         Método para detectar um movimento e atribuir um valor ao mesmo
 
@@ -79,7 +78,7 @@ class PreprocessingData:
         binary = []
 
         for i in range(np.shape(data)[0]):
-            if data[i]>bias:
+            if data[i]>self.__bias:
                 binary.append(nMovimento)
             else:
                 binary.append(0)
