@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>791</width>
-    <height>651</height>
+    <width>943</width>
+    <height>692</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>711</width>
+     <width>891</width>
      <height>261</height>
     </rect>
    </property>
@@ -26,7 +26,7 @@
   <widget class="QSlider" name="verticalSliderBias">
    <property name="geometry">
     <rect>
-     <x>740</x>
+     <x>910</x>
      <y>10</y>
      <width>22</width>
      <height>261</height>
@@ -42,70 +42,32 @@
     <enum>Qt::Vertical</enum>
    </property>
   </widget>
-  <widget class="QWidget" name="verticalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>370</y>
-     <width>328</width>
-     <height>281</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayoutPreprocessingFunctions">
-    <item>
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Selecione as funções que serão utilizadas como pré-processamento:</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="verticalLayoutWidget_2">
-   <property name="geometry">
-    <rect>
-     <x>450</x>
-     <y>370</y>
-     <width>328</width>
-     <height>281</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayoutPreprocessingFunctionsAnalyse">
-    <item>
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Selecione a função para análise:</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
   <widget class="QWidget" name="horizontalLayoutWidget_3">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>280</y>
-     <width>771</width>
+     <width>921</width>
      <height>80</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_3">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Canal para análise</string>
+         <string>Selecione o banco de dados</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="spinBoxNChannel"/>
+       <widget class="QComboBox" name="comboBoxDatabaseColumns"/>
       </item>
      </layout>
     </item>
     <item>
-     <spacer name="horizontalSpacer">
+     <spacer name="horizontalSpacer_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -118,14 +80,21 @@
      </spacer>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>Salvar daddos para treinamento</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Canal para análise</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBoxChannel"/>
+      </item>
+     </layout>
     </item>
     <item>
-     <spacer name="horizontalSpacer_2">
+     <spacer name="horizontalSpacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -152,6 +121,53 @@
      </layout>
     </item>
    </layout>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>370</y>
+     <width>921</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayoutPreprocessingFunctions">
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Selecione as funções que serão utilizadas como pré-processamento:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayoutPreprocessingFunctionsAnalyse">
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Selecione a função para análise:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>660</y>
+     <width>162</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Salvar daddos para treinamento</string>
+   </property>
   </widget>
  </widget>
  <customwidgets>

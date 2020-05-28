@@ -9,74 +9,91 @@ if not './features/' in sys.path:
 from features.preprocessing import Functions
 from features.plotlive import AnalysisPreprocessingPlot
 from features.preprocessingData import PreprocessingData
+from features.database import Database_emg
 
 class PreProcessingDialog(QDialog):
 
-    def __init__(self, aquisition):
+    def __init__(self, database):
         super().__init__()
-        self.preprocessing = PreprocessingData(aquisition)
-        self.preprocessing.getDataFromDatabase()
-        
         loadUi("preprocessingDialog.ui", self)
+        self.database = database
+
+        self.showColumns()
+        self.showChannels()
+
+        self.spinBoxMovement.valueChanged.connect(self.setLabel)
+
         
-        self.spinBoxNChannel.setRange(0, aquisition.nChannels)
-        self.verticalSliderBias.valueChanged.connect(self.setBias)
 
-        self.addPreprocessingFunctionsWidget()
-        self.setPreprocessingFunctions()
+    def showColumns(self):
+        columns = self.database.getCollections()
+        self.comboBoxDatabaseColumns.clear()
+        for c in columns:
+            self.comboBoxDatabaseColumns.addItem(c)
+        self.comboBoxDatabaseColumns.currentIndexChanged.connect(self.showChannels)
+    
+    def clearLayoutWidget(self, layout):
+        while layout.count():
+            child = layout.takeAt(0)
+            child.widget().deleteLater()
+    
+    def showPreprocessingFunctions(self):
+        self.clearLayoutWidget(self.verticalLayoutPreprocessingFunctionsAnalyse)
+        self.clearLayoutWidget(self.verticalLayoutPreprocessingFunctions)
 
-        self.plot = None
-        
+        self.choiceRadioButtons = {}
+        self.choiceCheckButtons = {}
 
-
-    def addPreprocessingFunctionsWidget(self):
-        '''
-        Método para adicionar widgets para seleção de funções de pré-processamento que serão utilizadas
-        '''
-        self.checkBoxFunctions = {}
-        self.radioBoxFuctionsAnalyse = {}
-        c = True
-        for k, _ in self.preprocessing.fPreprocessing.functions.items():
-            self.checkBoxFunctions[k] = QCheckBox(k, self)
-            self.checkBoxFunctions[k].setChecked(True)
-            self.checkBoxFunctions[k].stateChanged.connect(self.setPreprocessingFunctions)
-            self.radioBoxFuctionsAnalyse[k] = QRadioButton(k, self)
-            if c:
-                self.radioBoxFuctionsAnalyse[k].setChecked(True)
-                c = not(c)
-            self.radioBoxFuctionsAnalyse[k].toggled.connect(self.showPreprocessingFunction)
+        for k, _ in self.preprocessingData.f.functions.items():
+            self.choiceRadioButtons[k] = QRadioButton(k)
+            self.choiceRadioButtons[k].clicked.connect(self.showPlot)
+            self.verticalLayoutPreprocessingFunctionsAnalyse.addWidget(
+                self.choiceRadioButtons[k]
+            )
             
 
-            self.verticalLayoutPreprocessingFunctions.addWidget(self.checkBoxFunctions[k])
-            self.verticalLayoutPreprocessingFunctionsAnalyse.addWidget(self.radioBoxFuctionsAnalyse[k])
-
-    def setMinMaxRange(self, channel, function):
-        min_, max_ = self.preprocessing.getMinMaxRange(channel, function)
-        self.verticalSliderBias.setRange(min_, max_)
-        self.verticalSliderBias.setSingleStep(.001)
-        
-    def setBias(self):
-        self.preprocessing.setBias(self.scaler.inverse_transform(np.array(self.verticalSliderBias.value()).reshape(-1,1)))
-        self.target = self.generateBinaryClassifier(self.dataAnalyse, 1)
-        self.plot.updateGraph(self.dataAnalyse, self.target)
-
-    def setPreprocessingFunctions(self):
-        for k, v in self.checkBoxFunctions.items():
-            if v.isChecked():
-                self.preprocessing.preprocessingFunctions[k] = k
+            self.choiceCheckButtons[k] = QCheckBox(k)
+            self.verticalLayoutPreprocessingFunctions.addWidget(
+                self.choiceCheckButtons[k]
+            )
+            self.choiceCheckButtons[k].setChecked(True)
+            
     
-    def showPreprocessingFunction(self):
-        channel = self.spinBoxNChannel.value()
-        
-        function = None
-        for _, v in self.radioBoxFuctionsAnalyse.items():
+    def showChannels(self):
+        currentColumn = self.comboBoxDatabaseColumns.currentText()
+        data = self.database.push_data(currentColumn)
+        self.comboBoxChannel.clear()
+
+        for d in data:
+            for k, v in d['data']['data'].items():
+                #print(len(v))
+                #exit()
+                self.comboBoxChannel.addItem(k)
+            break
+        self.preprocessingData = PreprocessingData(data)
+        self.preprocessingData.preprocessData()
+        self.showPreprocessingFunctions()
+    
+    def setLabel(self):
+        self.label = int(self.spinBoxMovement.value())
+    
+    def showPlot(self):
+        function = ""
+        for k, v in self.choiceRadioButtons.items():
             if v.isChecked():
-                function = v.text()
+                function = k
                 break
         
-        self.dataAnalyse = self.preprocessing.preprocessedData[str(channel)][str(function)]
+        channel = self.comboBoxChannel.currentText()
+        data = self.preprocessingData.getData(channel, function)
+        print(data)
+        #self.plotWidget = AnalysisPreprocessingPlot(self.PlotWidget.canvas, 
+        #    self.preprocessingData.getRangeXAxis(channel, function))
         
-        if not(self.plot):
-            self.plot = AnalysisPreprocessingPlot(self.PlotWidget.canvas, (0, np.shape(self.dataAnalyse)[0]))
-        self.setMinMaxRange(str(channel), str(function))
-        self.plot.updateGraph(self.dataAnalyse, None)
+
+
+d = Database_emg('Gleidson', None, None)
+app = QApplication(sys.argv)
+w = PreProcessingDialog(d)
+w.show()
+sys.exit(w.exec_())

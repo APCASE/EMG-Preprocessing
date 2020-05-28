@@ -70,7 +70,7 @@ class DataAquisition:
         # Salvando os dados da aquisição
         if not(self.__c%int(self.interval[1]-self.interval[0])):
 
-            self.database.save(self.currentDataChannels)
+            self.database.save(self.currentDataChannels, self.nChannels, self.frequency, self.batchSize)
             self.__c = 0
 
     @staticmethod
