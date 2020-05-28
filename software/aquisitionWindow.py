@@ -45,7 +45,7 @@ class AquisitionDialog(QDialog):
         self.interval = [int(self.lineEditMinInterval.text()),
                 int(self.lineEditMaxInterval.text())
         ]
-        self.dataAquisition = DataAquisition(self.interval, self.frequencyAquisition, self.batchSize, self.nChannels)
+        self.dataAquisition = DataAquisition('Gleidson', self.interval, self.frequencyAquisition, self.batchSize, self.nChannels)
 
         self.intervalAquisition = 1000*self.batchSize/self.frequencyAquisition
         self.timer.setInterval(self.intervalAquisition)

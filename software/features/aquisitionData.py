@@ -14,7 +14,9 @@ from database import Database_emg
 
 class DataAquisition:
 
-    def __init__(self, interval, frequency, batchSize, nChannels):
+    def __init__(self, user_name, interval, frequency, batchSize, nChannels):
+        self.user_name = user_name
+        
         # TODO: Definir canais, tamanho do batchsize, intervalo de amostragem na plotagem
         self.interval = interval
         self.frequency = frequency
@@ -31,7 +33,7 @@ class DataAquisition:
         self._plot = None
         self.__c = 0
         # Banco de dados para armazenar dados dos canais
-        self.database = Database_emg('channels', 'data')
+        self.database = Database_emg(user_name, None, None)
     
     def updateGraph(self, canvas):
         """
@@ -68,7 +70,7 @@ class DataAquisition:
         # Salvando os dados da aquisição
         if not(self.__c%int(self.interval[1]-self.interval[0])):
 
-            #self.database.save(self.currentDataChannels)
+            self.database.save(self.currentDataChannels)
             self.__c = 0
 
     @staticmethod

@@ -1,33 +1,48 @@
 import pymongo
-import time
+from datetime import datetime
 class Database_emg:
     
-    def __init__(self, database_name, col_name, url=None):
-        self.__database_name = database_name
-        self.__col_name = col_name
-
-        self.__client = pymongo.MongoClient(url)
-        self.__db = self.__client[self.__database_name]
-        self.__col = self.__db[self.__col_name]
+    def __init__(self, user_name, URI, port):
         
-        self.__id = 1
+        self.user_name = user_name
+        self.col_name = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        
+        self.URI = URI
+        self.port = port
+        self.is_connected = False
+        try:
+            self.client = pymongo.MongoClient(URI, port)
+            self.db = self.client[self.user_name]
+            self.col = self.db[self.col_name]
+            self.is_connected = True
+            print('testes')
+        except pymongo.errors.ServerSelectionTimeoutError as err:
+            print('Erro ao se conectar com o dataset:\n\t{}'.format(err))
 
-        #self.clean_database()
+        self.id = 1
 
-    def save(self, data):
-        datal = {}
+    def save(self, data, replace=True):
+        if not replace:
+            self.update_time()
+        datal = {'user': self.user_name, 'data': {}}
         for k, v in data.items():
-            datal[k] = list(v)
-        dataDict = {"_id":self.__id, "data":datal}
-        result = self.__col.insert_one(dataDict)
+            datal['data'][k] = list(v)
+        dataDict = {"_id":self.id, "data":datal}
+        result = self.col.insert_one(dataDict)
         if result.acknowledged:
-            self.__id+=1
+            self.id+=1
         else:
             print("Problema ao salvar os dados, verifique a classe database")
     
     def push_data(self):
-        return self.__col.find()
+        return self.col.find()
     
     def clean_database(self):
-        self.__db[self.__col_name].drop()
-
+        self.db[self.col_name].drop()
+    
+    def update_time(self):
+        self.current_date = datetime.utcnow()
+    
+    
+#d = Database_emg('Gleidson', None, None)
+#print(d.db.list_collection_names())

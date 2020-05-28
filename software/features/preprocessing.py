@@ -76,30 +76,3 @@ class Functions():
             d[k] = np.asarray(d[k]).reshape(-1,1)
         
         return d
-
-
-class Preprocessing:
-    
-    def __init__(self, aquisition):
-        self.database = aquisition.database
-        self.nChannels = aquisition.nChannels
-        self.batchsize = aquisition.batchSize
-        self.preprocessingFunctions = {}
-        self.fPreprocessing = Functions()
-    
-    def getDataFromDatabase(self):
-        self.dataChannel = {}
-        
-        for i in self.database.push_data():
-            for k, v in i['data'].items():
-                try:
-                    self.dataChannel[k].append(v)
-                except:
-                    self.dataChannel[k] = []
-                    self.dataChannel[k].append(v)
-        
-        self.preprocessedData = {}
-        for k, v in self.dataChannel.items():
-            
-            self.dataChannel[k] = np.asarray(v).reshape(-1, self.batchsize)
-            self.preprocessedData[k] = self.fPreprocessing.transform(self.dataChannel[k], self.preprocessingFunctions)
