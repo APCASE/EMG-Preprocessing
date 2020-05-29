@@ -58,3 +58,12 @@
   *  label.csv
   
 <p style="text-align:justify">Para treinamento de um agente classificador, basta utilizar o sinal raw ou já preprocessado como <em>features</em> e o label como saída para treinamento. <strong>Observação:</strong> Não esqueça de alterar o valor do movimento</p>
+
+#### Bibliotecas Utilizadas
+  *  PyQT5;
+  *  Numpy;
+  *  Matplotlib;
+  *  Scikit Learn;
+  *  Scipy;
+  *  Pandas;
+  *  PyMongo.
