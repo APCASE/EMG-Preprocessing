@@ -6,8 +6,8 @@ import sys
 if not './features/' in sys.path:
     sys.path.insert(0, './features/')
 
+
 from features.aquisitionData import DataAquisition
-from preprocessingWindow import PreProcessingDialog
 
 class AquisitionDialog(QDialog):
 
@@ -30,7 +30,7 @@ class AquisitionDialog(QDialog):
             #self.dataAquisition.saveData()
             self.t=0
             self.progressBarAquisition.setValue(100)
-            self.pushButtonPreProcessing.clicked.connect(self.openPreProcessingDialog)
+
         else:
             self.dataAquisition.updateGraph(self.PlotWidget.canvas)
             self.progressBarAquisition.setValue(100*self.t/self.timeAquisition)
@@ -45,7 +45,8 @@ class AquisitionDialog(QDialog):
         self.interval = [int(self.lineEditMinInterval.text()),
                 int(self.lineEditMaxInterval.text())
         ]
-        self.dataAquisition = DataAquisition('Gleidson', self.interval, self.frequencyAquisition, self.batchSize, self.nChannels)
+        
+        self.dataAquisition = DataAquisition(self.interval, self.frequencyAquisition, self.batchSize, self.nChannels)
 
         self.intervalAquisition = 1000*self.batchSize/self.frequencyAquisition
         self.timer.setInterval(self.intervalAquisition)
@@ -63,11 +64,11 @@ class AquisitionDialog(QDialog):
         self.progressBarAquisition.setValue(100)
         self.timer = QTimer()
         
-    def openPreProcessingDialog(self):
+    '''def openPreProcessingDialog(self):
         preprocessDialog = PreProcessingDialog(self.dataAquisition)
-        preprocessDialog.exec_()
+        preprocessDialog.exec_()'''
 
-app = QApplication(sys.argv)
+'''app = QApplication(sys.argv)
 w = AquisitionDialog()
 w.show()
-sys.exit(w.exec_())
+sys.exit(w.exec_())'''

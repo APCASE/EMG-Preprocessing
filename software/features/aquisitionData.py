@@ -14,8 +14,18 @@ from database import Database_emg
 
 class DataAquisition:
 
-    def __init__(self, user_name, interval, frequency, batchSize, nChannels):
-        self.user_name = user_name
+    def __init__(self, interval, frequency, batchSize, nChannels):
+
+        if os.path.isfile('{}{}'.format('./', 'database.json')):
+            with open('{}{}'.format('./', 'database.json')) as f:
+                self.databaseInf = json.load(f)
+        else:
+            self.databaseInf = {
+                'user_name': "Usuario",
+                'URI': 'localhost',
+                'port': '27017'
+            }
+        self.user_name = self.databaseInf['user_name']
         
         # TODO: Definir canais, tamanho do batchsize, intervalo de amostragem na plotagem
         self.interval = interval
@@ -33,7 +43,8 @@ class DataAquisition:
         self._plot = None
         self.__c = 0
         # Banco de dados para armazenar dados dos canais
-        self.database = Database_emg(user_name, None, None)
+        self.database = Database_emg(self.user_name, self.databaseInf['URI'],
+            int(self.databaseInf['port']))
     
     def updateGraph(self, canvas):
         """

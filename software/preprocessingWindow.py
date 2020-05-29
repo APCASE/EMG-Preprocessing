@@ -6,6 +6,8 @@ from sklearn.preprocessing import MinMaxScaler
 import sys
 if not './features/' in sys.path:
     sys.path.insert(0, './features/')
+import os
+import json
 
 from features.preprocessing import Functions
 from features.plotlive import AnalysisPreprocessingPlot
@@ -14,10 +16,31 @@ from features.database import Database_emg
 
 class PreProcessingDialog(QDialog):
 
-    def __init__(self, database):
+    def __init__(self):
         super().__init__()
+
+        if os.path.isfile('{}{}'.format('./', 'database.json')):
+            with open('{}{}'.format('./', 'database.json')) as f:
+                self.databaseInf = json.load(f)
+        else:
+            self.databaseInf = {
+                'user_name': "Usuario",
+                'URI': 'localhost',
+                'port': '27017'
+            }
+        
+
         loadUi("preprocessingDialog.ui", self)
-        self.database = database
+
+        self.choiceRadioButtons = None
+        self.choiceCheckButtons = None
+
+
+        self.database = Database_emg(
+            self.databaseInf['user_name'],
+            self.databaseInf['URI'],
+            int(self.databaseInf['port']),
+            )
 
         self.showColumns()
         self.showChannels()
@@ -39,25 +62,26 @@ class PreProcessingDialog(QDialog):
             child.widget().deleteLater()
     
     def showPreprocessingFunctions(self):
-        self.clearLayoutWidget(self.verticalLayoutPreprocessingFunctionsAnalyse)
-        self.clearLayoutWidget(self.verticalLayoutPreprocessingFunctions)
+        #self.clearLayoutWidget(self.verticalLayoutPreprocessingFunctionsAnalyse)
+        #self.clearLayoutWidget(self.verticalLayoutPreprocessingFunctions)
 
-        self.choiceRadioButtons = {}
-        self.choiceCheckButtons = {}
+        if not self.choiceRadioButtons:
+            self.choiceRadioButtons = {}
+            self.choiceCheckButtons = {}
 
-        for k, _ in self.preprocessingData.f.functions.items():
-            self.choiceRadioButtons[k] = QRadioButton(k)
-            self.choiceRadioButtons[k].clicked.connect(self.showPlot)
-            self.verticalLayoutPreprocessingFunctionsAnalyse.addWidget(
-                self.choiceRadioButtons[k]
-            )
-            
+            for k, _ in self.preprocessingData.f.functions.items():
+                self.choiceRadioButtons[k] = QRadioButton(k)
+                self.choiceRadioButtons[k].clicked.connect(self.showPlot)
+                self.verticalLayoutPreprocessingFunctionsAnalyse.addWidget(
+                    self.choiceRadioButtons[k]
+                )
+                
 
-            self.choiceCheckButtons[k] = QCheckBox(k)
-            self.verticalLayoutPreprocessingFunctions.addWidget(
-                self.choiceCheckButtons[k]
-            )
-            self.choiceCheckButtons[k].setChecked(True)
+                self.choiceCheckButtons[k] = QCheckBox(k)
+                self.verticalLayoutPreprocessingFunctions.addWidget(
+                    self.choiceCheckButtons[k]
+                )
+                self.choiceCheckButtons[k].setChecked(True)
             
     
     def showChannels(self):
@@ -77,13 +101,13 @@ class PreProcessingDialog(QDialog):
     
     def setLabel(self):
         self.label = int(self.spinBoxMovement.value())
-    
+
     def saveCSVOnClicked(self):
         functions = []
         for k, b in self.choiceCheckButtons.items():
             if b.isChecked():
                 functions.append(k)
-        self.preprocessingData.exportToCSV(functions)
+        self.preprocessingData.exportToCSV(functions, self.target*self.label)
 
     
     def showPlot(self):
@@ -122,8 +146,8 @@ class PreProcessingDialog(QDialog):
         
 
 
-d = Database_emg('Gleidson', None, None)
-app = QApplication(sys.argv)
-w = PreProcessingDialog(d)
+#d = Database_emg('Gleidson', None, None)
+'''app = QApplication(sys.argv)
+w = PreProcessingDialog()
 w.show()
-sys.exit(w.exec_())
+sys.exit(w.exec_())'''

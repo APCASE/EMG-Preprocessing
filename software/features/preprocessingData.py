@@ -13,7 +13,7 @@ class PreprocessingData:
         self.data = data
     
     def preprocessData(self):
-        channel = {}
+        self.channel_rawData = {}
         batshsize = 100
         
         for d in self.data:
@@ -22,16 +22,16 @@ class PreprocessingData:
             self.nChannels = d['data']['n_channels']
             for k, v in d['data']['data'].items():
                 try:
-                    channel[k].append(v)
+                    self.channel_rawData[k].append(v)
                 except:
-                    channel[k] = []
-                    channel[k].append(v)
+                    self.channel_rawData[k] = []
+                    self.channel_rawData[k].append(v)
         
         
         self.preprocessedData = {}
-        for k, v in channel.items():
-            channel[k] = np.reshape(np.asarray(v), (-1, self.batshsize))       
-            self.preprocessedData[k] = self.f.transform(channel[k], self.f.functions)
+        for k, v in self.channel_rawData.items():
+            self.channel_rawData[k] = np.reshape(np.asarray(v), (-1, self.batshsize))       
+            self.preprocessedData[k] = self.f.transform(self.channel_rawData[k], self.f.functions)
     
     def getRangeXAxis(self, channel, function):
         data = np.reshape(self.preprocessedData[channel][function], (-1,1))
@@ -48,7 +48,7 @@ class PreprocessingData:
         min_ = np.min(data)
         return (np.asscalar(min_), np.asscalar(max_))
     
-    def exportToCSV(self, functions):
+    def exportToCSV(self, functions, label):
         data = {}
         for k, v in self.preprocessedData.items():
             data[k] = {}
@@ -56,8 +56,16 @@ class PreprocessingData:
                 data[k][f] = v[f]
 
         df = pd.DataFrame(data)
-        columns = ["Channel {}".format(c) for c in range(self.nChannels)]
-        df.columns = columns
-        print(df.head())
-    
+        df.columns = ["Channel {}".format(c) for c in range(self.nChannels)]
+        df.to_csv('signalPreprocessed.csv')
+
+        df = pd.Series(self.channel_rawData)
+        df.columns = ["Channel {}".format(c) for c in range(self.nChannels)]
+        df.to_csv('signalRaw.csv')
+        
+        labels = {'label':label}
+        df = pd.Series(labels)
+        df.to_csv('label.csv')
+
+        
          
