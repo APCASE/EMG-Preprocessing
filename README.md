@@ -13,6 +13,8 @@
 1.  Aquisição;
 2.  Pré-Processamento.
 
+<p style="text-align:justify">A janela também  conta com o menu de configuração do banco de dados. É recomendável que preencha o mesmo, todas as vezes que for necessário se fazer uma aquisição ou pré-processamento.</p>
+
 ### Aquisição
 <p style="text-align:justify">Na janela de aquisição, é necessário configurar as principais propriedades do software:</p>
 
@@ -34,3 +36,25 @@
  ```
 
 ### Pré-Processamento
+<p style="text-align:justify">A janela de pré-processamento mostra todas aquisições realizadas pelo usuário logo, é necessário selecionar a aquisição que se deseja trabalhar em cima. A partir da seleção dos canais, a janela irá mostrar as opções de funções pré-processamento que se deseja exibir no gráfico. O <em>vertical slider</em> na janela é utilizado como ferramento para selecionar um <em>bias</em> que por sua vez tem a função de identificar um movimento, isto é, se os valores contidos nos gráficos forem menor que o <em>bias</em>, estes serão considerados como um repouso na aquisição.</p>
+
+<p style="text-align:justify">Entre as funções de pré-processamento implementadas, têm-se:</p>
+
+  *  <strong>IEMG</strong>;
+  *  <strong>MAV</strong>;
+  *  <strong>SSI</strong>;
+  *  <strong>RMS</strong>;
+  *  <strong>LOG</strong>;
+  *  <strong>WL</strong>;
+  *  <strong>AAC</strong>;
+  *  <strong>DASDV</strong>.
+
+<p style="text-align:justify">Todas essas funções estão implementadas no arquivo <em>software/features/preprocessing.py</em>.</p>
+
+<p style="text-align:justify">Uma vez selecionada as funções que se deseja salvar, para salvar os dados em arquivos <em>csv</em>, basta clicar no botão <em>salvar dados para treinamento</em>. O programa irá gerar três arquivos:</p>
+
+  *  signalRaw.csv
+  *  signalPreprocessed.csv
+  *  label.csv
+  
+<p style="text-align:justify">Para treinamento de um agente classificador, basta utilizar o sinal raw ou já preprocessado como <em>features</em> e o label como saída para treinamento. <strong>Observação:</strong> Não esqueça de alterar o valor do movimento</p>
