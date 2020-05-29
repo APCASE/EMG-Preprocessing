@@ -1,6 +1,6 @@
 import numpy as np
 from preprocessing import Functions
-from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
 
 # Essa classe irá tratar os dados de pré-processamento
 class PreprocessingData:
@@ -15,10 +15,11 @@ class PreprocessingData:
     def preprocessData(self):
         channel = {}
         batshsize = 100
-        contador = 0
+        
         for d in self.data:
-            contador +=1
-            batshsize = d['data']['batsh_size']
+            
+            self.batshsize = d['data']['batsh_size']
+            self.nChannels = d['data']['n_channels']
             for k, v in d['data']['data'].items():
                 try:
                     channel[k].append(v)
@@ -29,16 +30,34 @@ class PreprocessingData:
         
         self.preprocessedData = {}
         for k, v in channel.items():
-            channel[k] = np.asarray(v).reshape(-1, batshsize)
-            
+            channel[k] = np.reshape(np.asarray(v), (-1, self.batshsize))       
             self.preprocessedData[k] = self.f.transform(channel[k], self.f.functions)
     
     def getRangeXAxis(self, channel, function):
-        data = self.preprocessedData[channel][function]
+        data = np.reshape(self.preprocessedData[channel][function], (-1,1))
+        max_ = np.shape(data)[0]
+        min_ = 0
+        return (min_, max_)
+    
+    def getData(self, channel, function):
+        return self.preprocessedData[channel][function]
+    
+    def getRangeYAxis(self, channel, function):
+        data = np.reshape(self.preprocessedData[channel][function], (-1,1))
         max_ = np.max(data)
         min_ = np.min(data)
         return (np.asscalar(min_), np.asscalar(max_))
     
-    def getData(self, channel, function):
-        return self.preprocessedData[channel][function]
+    def exportToCSV(self, functions):
+        data = {}
+        for k, v in self.preprocessedData.items():
+            data[k] = {}
+            for f in functions:
+                data[k][f] = v[f]
+
+        df = pd.DataFrame(data)
+        columns = ["Channel {}".format(c) for c in range(self.nChannels)]
+        df.columns = columns
+        print(df.head())
+    
          

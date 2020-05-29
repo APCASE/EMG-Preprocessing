@@ -52,13 +52,21 @@ class AnalysisPreprocessingPlot:
         self.__canvas.figure.tight_layout()
         self.__canvas.draw()
     
-    def updateGraph(self, y, y_target):
-        self.__axes.set_ylim(np.min(y), np.max(y)*1.1)
+    def updatePlot(self, y):
+        self.__axes.set_ylim(0.9*np.min(y), np.max(y)*1.1)
         x = np.arange(0, np.shape(y)[0], 1)
         
         self.__preprocessingFunctionLine[0].set_xdata(x)
         self.__preprocessingFunctionLine[0].set_ydata(y)
 
+        #self.__targetLine[0].set_xdata(x)
+        #self.__targetLine[0].set_ydata(y_target)
+
+        self.__canvas.draw()
+        self.__canvas.flush_events()
+    
+    def updateBiasPlot(self, y_target):
+        x = np.arange(0, np.shape(y_target)[0], 1)
         self.__targetLine[0].set_xdata(x)
         self.__targetLine[0].set_ydata(y_target)
 
