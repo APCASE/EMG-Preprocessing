@@ -67,3 +67,6 @@
   *  Scipy;
   *  Pandas;
   *  PyMongo.
+
+#### Exportação do repositório
+<p align="justify">Esse repositório está sendo migrado para a organização APCASE.</p>
